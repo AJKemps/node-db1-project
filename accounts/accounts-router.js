@@ -46,11 +46,47 @@ router.post("/", (req, res) => {
   // goes here
 });
 
-router.put(":/id", (req, res) => {
+router.put("/:id", (req, res) => {
+  let requestedAccount = req.params.id;
+  let updatedAccount = req.body;
+
+  db("accounts")
+    .where({ id: requestedAccount })
+    .update(updatedAccount)
+    .then((response) => {
+      if (response === 1) {
+        res
+          .status(200)
+          .json({ message: "updated successfully", data: response });
+      } else {
+        res.status(404).json({ error: "record not found" });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
+
   // goes here
 });
 
-router.delete(":/id", (req, res) => {
+router.delete("/:id", (req, res) => {
+  let requestedAccount = req.params.id;
+
+  db("accounts")
+    .where({ id: requestedAccount })
+    .del()
+    .then((response) => {
+      if (response === 1) {
+        res
+          .status(200)
+          .json({ message: "deleted successfully", data: response });
+      } else {
+        res.status(404).json({ error: "record not found" });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
   // goes here
 });
 
